@@ -3,6 +3,8 @@ __author__ = 'wangyang'
 from Tkinter import *   #引入Tkinter工具包
 import os
 import random
+import time,sched
+import threading
 
 this_file_path = os.path.split(os.path.realpath(__file__))[0] + '\\';
 
@@ -13,24 +15,28 @@ def hello():
 class Lottery:
 
     def __init__(self):
+
+        self.user_list = []
+        self.is_stop = True #是否停止
+        self.read_from_file('test.txt')
         self.draw()
     def draw(self):
         self.win = Tk()  #定义一个窗体
         self.win.title('Hello World')    #定义窗体标题
-        self.win.geometry('800x600')     #定义窗体的大小，是400X200像素
-        self.begin_btn = Button(self.win, text='开始' ,height = 4, width = 6, command=hello)
+        self.win.geometry('600x400')     #定义窗体的大小，是400X200像素
+        self.begin_btn = Button(self.win, text='开始' ,height = 4, width = 6, command=self.begin)
         #注意这个地方，不要写成hello(),如果是hello()的话，
         #会在mainloop中调用hello函数，
         # 而不是单击button按钮时出发事件
         self.begin_btn.pack(expand=NO, fill=X, side=BOTTOM) #将按钮pack，充满整个窗体(只有pack的组件实例才能显示)
-        self.end_btn = Button(self.win, text='结束' ,height = 4, width = 6, command=hello)
+        self.end_btn = Button(self.win, text='结束' ,height = 4, width = 6, command=self.end)
         #注意这个地方，不要写成hello(),如果是hello()的话，
         #会在mainloop中调用hello函数，
         # 而不是单击button按钮时出发事件
         self.end_btn.pack(expand=NO, fill=X, side=BOTTOM) #将按钮pack，充满整个窗体(只有pack的组件实例才能显示)
         self.v = StringVar() 
 
-        self.ans_label = Label(self.win,textvariable = self.v, height = 10 , width = 10 );
+        self.ans_label = Label(self.win,textvariable = self.v, font = (NONE,40), height = 10 , width = 10 );
         self.v.set("hello world")
         self.ans_label.pack();
         self.v.set("hello")
@@ -39,32 +45,42 @@ class Lottery:
         self.win.mainloop() #进入主循环，程序运行
 
     def begin(self):
-        
+        self.is_stop = False
+        self.t = threading.Timer(0.1,self.show_random_user,())
+        self.t.start()
 
-user_list = [];
+    def end(self):
+        self.is_stop = True
 
-def read_from_file(filename):
-    file_handle = open(this_file_path + filename)
-    # if file_handle == null:
-    # 	return;
-    line = file_handle.readline()
+    def show_random_user(self):
+        while self.is_stop == False:
+            cur_user = self.choose_next();
+            self.v.set(cur_user)
+            t = threading.Timer(0.1,self.show_random_user,())
+            t.start()
+            return
 
-    while len(line) > 0 :
-        line = line.rstrip('\r\n')
-        line = line.replace('\n','')
-        line = line.replace('\r','')
-        user_list.append(line)
-        print line
+    def read_from_file(self, filename):
+        file_handle = open(this_file_path + filename)
+        # if file_handle == null:
+        #   return;
         line = file_handle.readline()
 
-    file_handle.close()
+        while len(line) > 0 :
+            line = line.rstrip('\r\n')
+            line = line.replace('\n','')
+            line = line.replace('\r','')
+            self.user_list.append(line)
+            print line
+            line = file_handle.readline()
+        file_handle.close()
 
-def choose_next():
-    num = len(user_list)
-    rand = random.randint(0, num - 1)
-    chosen_user = user_list[rand]
-    del user_list[rand]
-    return chosen_user
+    def choose_next(self):
+        num = len(self.user_list)
+        rand = random.randint(0, num - 1)
+        chosen_user = self.user_list[rand]
+        # del user_list[rand]
+        return chosen_user
 
 def main():
     # read_from_file('test.txt')
