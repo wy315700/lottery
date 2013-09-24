@@ -26,19 +26,28 @@ class Lottery:
         self.win = Tk()  #定义一个窗体
         self.win.title('Hello World')    #定义窗体标题
         self.win.geometry('600x400')     #定义窗体的大小，是400X200像素
-        self.begin_btn = Button(self.win, text='开始' ,height = 4, width = 6, command=self.begin)
+
+        bottonframe = Frame(self.win, height = 30)
+        bottonframe.pack(fill=X, side = BOTTOM )
+
+
+        buttonframe = Frame(self.win)
+        buttonframe.pack( side = BOTTOM )
+
+
+        self.begin_btn = Button(buttonframe, text='开始' ,height = 4, width = 10,  padx = 5, command=self.begin)
         #注意这个地方，不要写成hello(),如果是hello()的话，
         #会在mainloop中调用hello函数，
         # 而不是单击button按钮时出发事件
-        self.begin_btn.pack(expand=NO, fill=X, side=BOTTOM) #将按钮pack，充满整个窗体(只有pack的组件实例才能显示)
-        self.end_btn = Button(self.win, text='结束' ,height = 4, width = 6, command=self.end)
+        self.begin_btn.pack(expand=NO, fill=X, side=LEFT) #将按钮pack，充满整个窗体(只有pack的组件实例才能显示)
+        self.end_btn = Button(buttonframe, text='结束' ,height = 4, width = 10, padx = 5, command=self.end)
         #注意这个地方，不要写成hello(),如果是hello()的话，
         #会在mainloop中调用hello函数，
         # 而不是单击button按钮时出发事件
-        self.end_btn.pack(expand=NO, fill=X, side=BOTTOM) #将按钮pack，充满整个窗体(只有pack的组件实例才能显示)
+        self.end_btn.pack(expand=NO, fill=X, side=LEFT) #将按钮pack，充满整个窗体(只有pack的组件实例才能显示)
         self.v = StringVar() 
 
-        self.ans_label = Label(self.win,textvariable = self.v, font = (NONE,40), height = 10 , width = 10 );
+        self.ans_label = Label(self.win,textvariable = self.v , font = (NONE,40), height = 10 , width = 10 );
         self.v.set("hello world")
         self.ans_label.pack();
         self.v.set("hello")
