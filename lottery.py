@@ -45,6 +45,7 @@ class Lottery:
 
 
         self.win.mainloop() #进入主循环，程序运行
+        self.is_stop = True
 
     def begin(self):
         self.is_stop = False
