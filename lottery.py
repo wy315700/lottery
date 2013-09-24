@@ -20,6 +20,8 @@ class Lottery:
         self.is_stop = True #是否停止
         self.read_from_file('test.txt')
         self.draw()
+    def __del__( self ):  
+        self.is_stop = True 
     def draw(self):
         self.win = Tk()  #定义一个窗体
         self.win.title('Hello World')    #定义窗体标题
