@@ -127,7 +127,8 @@ class Lottery:
 
     def open_file(self):
         filename = tkFileDialog.askopenfilename(initialdir = __file__)
-        self.read_from_file(filename)
+        if filename != '':
+            self.read_from_file(filename)
     def hello(self):
         tkMessageBox.showinfo("Hello World!","千千世界 静静倾听 天外之音")
 
