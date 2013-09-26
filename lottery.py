@@ -132,7 +132,7 @@ class Lottery:
         return None
 
     def open_file(self):
-        filename = tkFileDialog.askopenfilename(initialdir = __file__)
+        filename = tkFileDialog.askopenfilename(initialdir = "./")
         if filename != '':
             self.read_from_file(filename)
     def hello(self):
