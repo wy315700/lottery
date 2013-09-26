@@ -152,7 +152,7 @@ if __name__ == '__main__':
         def musicplay():
             pygame.init()
             pygame.display.set_mode((200,100))
-            pygame.mixer.music.load("初音ミクの消失.mp3")
+            pygame.mixer.music.load("music.mp3")
             pygame.mixer.music.play(0)
             
             clock = pygame.time.Clock()
