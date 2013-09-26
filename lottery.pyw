@@ -2,7 +2,7 @@
 __author__ = 'wangyang'
 from Tkinter import *   #引入Tkinter工具包
 import tkMessageBox
-import os
+import os,sys
 import random
 import time,sched
 import threading
@@ -17,16 +17,18 @@ class Lottery:
     def __init__(self):
 
         self.user_list = []
-        self.is_stop = threading.Event() #是否停止
-        self.is_stop.clear() #设置停止标志符
+        self.event = threading.Event() #消息
+        self.event.clear() #设置消息
+
+        self.is_stop = False #由于最后关闭线程
 
         self.t = threading.Thread(target = self.show_random_user_thread,args = ())
         self.t.start() #启动循环线程
 
         # self.read_from_file('test.txt')
         self.draw()
-    def __del__( self ):  
-        self.t.stop()
+    def __del__( self ): 
+        pass
     def draw(self):
         self.win = Tk()  #定义一个窗体
         self.win.title('Hello World')    #定义窗体标题
@@ -77,25 +79,27 @@ class Lottery:
         self.win.config(menu=menubar)
 
         self.win.mainloop() #进入主循环，程序运行
-        self.is_stop = True
+        self.event.set()
+        self.is_stop =True
 
     def begin(self):
-        self.is_stop.set()
+        self.event.set()
         
 
     def end(self):
-        self.is_stop.clear()
+        self.event.clear()
 
     def show_random_user_thread(self):
-        cur_user = - 1;
-        while True:
-            if not self.is_stop.isSet():
-                if cur_user != -1:
+        cur_user = None;
+        while self.is_stop == False:
+            if not self.event.isSet():
+                if cur_user != None:
                     self.select_one(cur_user)
-                self.is_stop.wait()
+                self.event.wait()
             else:
                 cur_user = self.choose_next();
-                self.v.set(cur_user)
+                if not cur_user == None:
+                    self.v.set(cur_user)
                 time.sleep(0.1)
 
     def read_from_file(self, filename):
@@ -120,10 +124,12 @@ class Lottery:
 
     def choose_next(self):
         num = len(self.user_list)
-        rand = random.randint(0, num - 1)
-        chosen_user = self.user_list[rand]
-        # del user_list[rand]
-        return chosen_user
+        if num > 0 :
+            rand = random.randint(0, num - 1)
+            chosen_user = self.user_list[rand]
+            # del user_list[rand]
+            return chosen_user
+        return None
 
     def open_file(self):
         filename = tkFileDialog.askopenfilename(initialdir = __file__)
