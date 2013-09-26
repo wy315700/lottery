@@ -7,6 +7,8 @@ import random
 import time,sched
 import threading
 import tkFileDialog
+import xlrd
+import pygame
 
 
 def hello():
@@ -99,20 +101,18 @@ class Lottery:
                 time.sleep(0.1)
 
     def read_from_file(self, filename):
-        file_handle = open(filename)
+        '''从excel读取'''
+        file_handle = xlrd.open_workbook(filename)
+        sheet = file_handle.sheet_by_index(0)
+        lines = (sheet.col_values(0,1)) # 假设第一列是姓名,可调整
         # if file_handle == null:
         #   return;
         self.user_list =[]
-        line = file_handle.readline()
 
-        while len(line) > 0 :
-            line = line.rstrip('\r\n')
-            line = line.replace('\n','')
-            line = line.replace('\r','')
+        for line in lines:
             self.user_list.append(line)
             print line
-            line = file_handle.readline()
-        file_handle.close()
+            
         self.v.set(len(self.user_list))
 
     def select_one(self, select_user):
@@ -140,8 +140,24 @@ def main():
     
     app = Lottery()
 
+
 if __name__ == '__main__':
     try:
+        def musicplay():
+            pygame.init()
+            pygame.display.set_mode((200,100))
+            pygame.mixer.music.load("初音ミクの消失.mp3")
+            pygame.mixer.music.play(0)
+            
+            clock = pygame.time.Clock()
+            clock.tick(10)
+            while pygame.mixer.music.get_busy():
+                pygame.event.poll()
+                clock.tick(10)
+                
+        musicplay_thread = threading.Thread(target=musicplay)
+        musicplay_thread.daemon = True
+        musicplay_thread.start()
         main()
     except KeyboardInterrupt:
         pass
