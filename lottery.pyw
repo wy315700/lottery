@@ -17,11 +17,16 @@ class Lottery:
     def __init__(self):
 
         self.user_list = []
-        self.is_stop = True #是否停止
+        self.is_stop = threading.Event() #是否停止
+        self.is_stop.clear() #设置停止标志符
+
+        self.t = threading.Thread(target = self.show_random_user_thread,args = ())
+        self.t.start() #启动循环线程
+
         self.read_from_file('test.txt')
         self.draw()
     def __del__( self ):  
-        self.is_stop = True 
+        self.t.stop()
     def draw(self):
         self.win = Tk()  #定义一个窗体
         self.win.title('Hello World')    #定义窗体标题
@@ -57,18 +62,23 @@ class Lottery:
         self.is_stop = True
 
     def begin(self):
-        self.is_stop = False
-        self.t = threading.Thread(target = self.show_random_user_thread,args = ())
-        self.t.start()
+        self.is_stop.set()
+        
 
     def end(self):
-        self.is_stop = True
+        self.is_stop.clear()
 
     def show_random_user_thread(self):
-        while self.is_stop == False:
-            cur_user = self.choose_next();
-            self.v.set(cur_user)
-            time.sleep(0.1)
+        cur_user = - 1;
+        while True:
+            if not self.is_stop.isSet():
+                if cur_user != -1:
+                    self.select_one(cur_user)
+                self.is_stop.wait()
+            else:
+                cur_user = self.choose_next();
+                self.v.set(cur_user)
+                time.sleep(0.1)
 
     def read_from_file(self, filename):
         file_handle = open(this_file_path + filename)
@@ -84,6 +94,9 @@ class Lottery:
             print line
             line = file_handle.readline()
         file_handle.close()
+
+    def select_one(self, select_user):
+        self.user_list.remove(select_user)
 
     def choose_next(self):
         num = len(self.user_list)
