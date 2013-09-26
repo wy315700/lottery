@@ -58,19 +58,17 @@ class Lottery:
 
     def begin(self):
         self.is_stop = False
-        self.t = threading.Timer(0.1,self.show_random_user,())
+        self.t = threading.Thread(target = self.show_random_user_thread,args = ())
         self.t.start()
 
     def end(self):
         self.is_stop = True
 
-    def show_random_user(self):
+    def show_random_user_thread(self):
         while self.is_stop == False:
             cur_user = self.choose_next();
             self.v.set(cur_user)
-            t = threading.Timer(0.1,self.show_random_user,())
-            t.start()
-            return
+            time.sleep(0.1)
 
     def read_from_file(self, filename):
         file_handle = open(this_file_path + filename)
