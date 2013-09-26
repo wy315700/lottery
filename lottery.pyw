@@ -8,7 +8,7 @@ import time,sched
 import threading
 import tkFileDialog
 import xlrd
-import pygame
+# import pygame
 
 
 def hello():
@@ -149,21 +149,21 @@ def main():
 
 if __name__ == '__main__':
     try:
-        def musicplay():
-            pygame.init()
-            pygame.display.set_mode((200,100))
-            pygame.mixer.music.load("music.mp3")
-            pygame.mixer.music.play(0)
+        # def musicplay():
+        #     pygame.init()
+        #     pygame.display.set_mode((200,100))
+        #     pygame.mixer.music.load("music.mp3")
+        #     pygame.mixer.music.play(0)
             
-            clock = pygame.time.Clock()
-            clock.tick(10)
-            while pygame.mixer.music.get_busy():
-                pygame.event.poll()
-                clock.tick(10)
+        #     clock = pygame.time.Clock()
+        #     clock.tick(10)
+        #     while pygame.mixer.music.get_busy():
+        #         pygame.event.poll()
+        #         clock.tick(10)
                 
-        musicplay_thread = threading.Thread(target=musicplay)
-        musicplay_thread.daemon = True
-        musicplay_thread.start()
+        # musicplay_thread = threading.Thread(target=musicplay)
+        # musicplay_thread.daemon = True
+        # musicplay_thread.start()
         main()
     except KeyboardInterrupt:
         pass
