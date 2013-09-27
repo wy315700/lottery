@@ -150,13 +150,13 @@ def main():
 if __name__ == '__main__':
     try:
         def musicplay():
-            song = pyglet.media.load('初音ミクの消失.mp3')
+            song = pyglet.media.load('music.mp3')
             song.play()
             pyglet.app.run()
                 
-        # musicplay_thread = threading.Thread(target=musicplay)
-        # musicplay_thread.daemon = True
-        # musicplay_thread.start()
+        musicplay_thread = threading.Thread(target=musicplay)
+        musicplay_thread.daemon = True
+        musicplay_thread.start()
         main()
     except KeyboardInterrupt:
         pass
