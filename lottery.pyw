@@ -111,7 +111,7 @@ class Lottery:
         lines = (sheet.col_values(0,1)) # 假设第一列是姓名,可调整
         # if file_handle == null:
         #   return;
-        self.user_list =[]
+        # self.user_list =[]
 
         for line in lines:
             self.user_list.append(line)
